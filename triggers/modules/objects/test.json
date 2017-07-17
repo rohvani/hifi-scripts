@@ -1,0 +1,19 @@
+{
+  "name": "Test Object",
+  "type": "Box",                 
+  "dynamic": true, 
+  "collisionsWillMove": true,
+  "gravity": {
+    "x": 0,
+    "y": -9.8,
+    "z": 0
+  },
+  "velocity": {
+    "x": 0,
+    "y": -9.8,
+    "z": 0
+  },
+  "userData": {
+      "grabbableKey": { "grabbable" : true }
+  }
+}

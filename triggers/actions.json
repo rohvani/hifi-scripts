@@ -1,0 +1,37 @@
+{
+  "actions" : [
+    {
+      "name":"spawner",
+      "description":"spawns an object when zone is entered",
+      "attributes": [
+        {
+          "name":"object_url",
+          "description":"URL to JSON that describes what to spawn"
+        },
+        {
+          "name":"position_uuid",
+          "description":"UUID of the entity to spawn the object at"
+        },
+        {
+          "name":"lifetime",
+          "description":"How long the entity should exist after being spawned (sec, -1 for none)",
+          "default":"-1"
+        }
+      ]
+    },
+    {
+      "name":"sound",
+      "description":"plays a sound when zone is entered",
+      "attributes": [
+        {
+          "name":"audio_url",
+          "description":"URL to audio file to be played"
+        },
+        {
+          "name":"position_uuid",
+          "description":"UUID of the entity to play the sound at"
+        }
+      ]
+    }
+  ]
+}

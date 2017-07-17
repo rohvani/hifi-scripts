@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>Trigger Editor</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/edit-style.css">
+    <link rel="stylesheet" type="text/css" href="css/hud.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/rivets.bundled.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+  </head>
+  <body>
+  
+    <div id="zoneTriggerCreator">
+    
+      <div id="actions">
+        <h3>Select an action to create a trigger for</h3>
+        <span rv-each-action="data.actions">
+          <div>
+            <hr>
+            <input type="button" class="blue" value="Select" rv-on-click="controller.selectAction"></button>
+            <h2 style="display:inline" rv-text="action.name"></h2>
+            <hr>
+            <h3 rv-text="action.description"></h3>
+          </div>
+        </span>
+        
+        <select>
+          <option rv-each-action="data.actions" rv-value="action.name">{action.name}</option>
+        </select>
+        <input type="button" class="blue" value="Select" rv-on-click="controller.selectAction"></button>
+        
+        
+      </div>
+      
+      <hr>
+      
+      <div rv-show="data.selectedAction.name" id="actionCustomizer">
+        <h2>Customize your {data.selectedAction.name} trigger below:</h2>
+        <hr>
+        <span rv-each-attribute="data.selectedAction.attributes">
+          <b rv-text="attribute.name"></b><br>
+          <span rv-text="attribute.description"></span>
+          <input type="text" rv-value="attribute.default" rv-id="attribute.name"></input>
+        </span>
+        <center>
+          <input type="button" class="blue createTrigger" value="Create" rv-on-click="controller.createTrigger"></button>
+        </center>
+      </div>
+      
+    </div>
+    
+    <div class="content">
+      <p id='output'></p>
+    </div>
+    
+  </body>
+</html>
