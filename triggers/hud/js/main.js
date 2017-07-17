@@ -8,9 +8,9 @@ var data = {
 var controller = {
   // called when we select a trigger type to customize
   selectAction: function(e, model) {
-    console.log(data.selectedAction);
-    console.log(model);
-    data.selectedAction = model.data.actions[model.index];
+    data.selectedAction = data.actions.filter(function(element){ 
+      return element.name === data.selectedActionName;
+    })[0];
   },
   // called when we click 'Create' button for a trigger
   createTrigger: function(e, model) {
