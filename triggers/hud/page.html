@@ -13,11 +13,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Raleway:300,400,600,700">
     <link rel="stylesheet" type="text/css" href="css/hifi-style.css">
     <link rel="stylesheet" type="text/css" href="css/edit-style.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/hud.css">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -27,26 +25,20 @@
   <body>
   
     <div id="zoneTriggerCreator">
-      <div id="actions" class="section-header">
+      <div id="actions">
         <h2>Create Trigger</h2>
         <h4>Select an action</h4>
+        
+        <!-- temporary until selects/dropdowns are fixed -->
+        <input type="button" class="blue" value="Select" rv-on-click="controller.selectAction">
+        <span>(temp until selects/dropdowns are fixed)</span>
+        <!-- end temp -->
+        
         <div class="dropdown">
-          <select rv-value="data.selectedActionName" rv-on-change="controller.selectAction">
+          <select id="selectedAction" rv-value="data.selectedActionName" rv-on-change="controller.selectAction" >
             <option rv-each-action="data.actions" rv-value="action.name">{action.name}</option>
           </select>
         </div>
-        <!--
-        <span rv-each-action="data.actions">
-          <div>
-            <hr>
-            <input type="button" class="blue" value="Select" rv-on-click="controller.selectAction"></button>
-            <h2 style="display:inline" rv-text="action.name"></h2>
-            <hr>
-            <h3 rv-text="action.description"></h3>
-          </div>
-        </span>
-        <input type="button" class="blue" value="Select" rv-on-click="controller.selectAction"></button>
-        -->
       </div>
       
       <hr>
