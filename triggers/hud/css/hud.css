@@ -14,7 +14,22 @@
 
 hr {
   position: inherit;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   margin-top: 25px;
   margin-bottom: 10px;
+}
+
+.dropdown dl {
+  width: auto;
+}
+
+.hackySelect {
+  text-align: center;
+  
+}
+
+.hackySelect input {
+  margin-top: -10px;
+  margin-bottom: -18px;
+  width: 100%;
 }
