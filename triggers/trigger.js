@@ -21,6 +21,8 @@
   }
   
   function getActionName() {
+    // TODO: we should probably sanitize this so that people don't go loading
+    // files outside our modules directory
     var properties = getUserData();
     return properties.name;
   }

@@ -32,6 +32,7 @@
   <body>
   
     <div id="zoneTriggerCreator">
+    
       <div id="actions">
         <h2>Create Trigger</h2>
         <h4>Select an action</h4>
@@ -53,18 +54,23 @@
       <hr>
       
       <div rv-show="data.selectedAction.name" id="actionCustomizer">
+      
         <h2>{data.selectedAction.name}</h2>
         <h4>{data.selectedAction.description}</h4>
         <hr>
+        
         <span rv-each-attribute="data.selectedAction.attributes">
           <b rv-text="attribute.name"></b><br>
           <span rv-text="attribute.description"></span>
           <input type="text" rv-value="attribute.default" rv-id="attribute.name"></input>
         </span>
+        
         <center>
           <input type="button" class="blue createTrigger" value="Create" rv-on-click="controller.createTrigger">
         </center>
+        
       </div>
+      
       
     </div>
     

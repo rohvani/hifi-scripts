@@ -53,7 +53,12 @@ var controller = {
       "reason" : "createTrigger",
       "data" : customizedTrigger
     };
-    EventBridge.emitWebEvent(JSON.stringify(event));
+    // if we're in a standalone browser, we should just output what we'd send
+    if (typeof Eventbridge !== "undefined") {
+      EventBridge.emitWebEvent(JSON.stringify(event));
+    } else {
+      print(JSON.stringify(event));
+    }
   }
 };
 
