@@ -28,9 +28,9 @@
   function getActionProperties() {
     var userdata = getUserData();
     
-    // temporary
+    // inherented userdata
     var pos = Entities.getEntityProperties(_this.entityID, ["position"]).position;
-    userdata.properties.position = pos;
+    userdata.properties.trigger_position = pos;
     
     return userdata.properties;
   }
