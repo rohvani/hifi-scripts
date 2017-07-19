@@ -13,7 +13,7 @@
 */
 
 var stage = 0;
-var timeToGrow = 2000; //msec
+var timeToGrow = 500; //msec
 var trees = [
   "https://hifi-content.s3.amazonaws.com/ozan/dev/sets/bitGem/polygon_knights/props/tree_dead_small.fbx",
   "https://hifi-content.s3.amazonaws.com/ozan/dev/sets/bitGem/polygon_knights/props/tree_dead_medium.fbx",
@@ -23,7 +23,7 @@ var treeHeights = [ 4.2578, 6.5748, 10.4070 ];
 var initialTreeProperties = {  
   "shapeType": "simple-hull",
   "type": "Model",
-  "lifetime": 5
+  "lifetime": 20
 };
 
 var tree = "";
@@ -90,7 +90,7 @@ function grow(entity) {
 module.exports.performAction = function(userdata) {
   spawner = userdata.position_uuid;
   
-  // reset default properties encase this is a second spawn
+  // reset default properties incase this is a second spawn
   stage = 0;
   initialTreeProperties.modelURL = trees[stage];
   
