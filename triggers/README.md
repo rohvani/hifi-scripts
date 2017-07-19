@@ -14,9 +14,27 @@ Notes:
  
  2. Some modules require existing objects, for example, the `spawner` and `sound` modules will grab the position of an object specified by their UUID to use for where to spawn an object or play a sound.  In order to satisfy this, simply create a new object with the `CREATE` tool and copy its UUID (either during the trigger creation process or via editing the zone trigger's `userdata` through the `CREATE` tool.)
 
+Using a Module
+-------
+By default, the zone trigger tool comes with several prebuilt generic modules (such as a spawner and sound player).  You may notice that some of these modules ask for the UUID of an object to use as a position, presently, we use this as an easier method for customizing your zone trigger instead of requiring you to input a set of coordinates.
+
+Through the zone trigger tool, after you have filled out all the attributes, clicking the `CREATE` button will cause a small white cube to appear near your avatar.  This white cube defines not only the trigger, but also the area which the trigger will react to.  You should resize and position the cube as necessary.
+
+If there were any attributes that you forgot to fill or filled in incorrectly, you may change them via opening the `CREATE` tool and viewing the entity properties for the white cube mentioned above.  The attributes will be found in the user data, there the attributes and their values can be changed.
+
+Technical Details
+-------
+All modules are loaded from `actions.json` by `hud.js`, these are sent to the tablet app webpage (`page.html` and `main.js`) through an event bridge.  Once a trigger has been customized and the `CREATE` button pressed, JSON representing the customized trigger will be sent back over the event bridge to the `hud.js` script.  The `hud.js` script is responsible for creating the zone trigger, giving it the proper userdata, and adding the `trigger.js` script to the zone trigger.
+
+Once the zone trigger has been created in-world, `trigger.js` registers a `enterEntity` callback which is responsible for invoking the assigned module if the zone trigger has been entered by an avatar entity.  `trigger.js` will pass the customized trigger userdata along with some additional inherited (can be found in the Extra Information section) attributes to the module and invoke it's action.
+
 Creating a Module
 -------
 To add a module to the zone trigger tool, find `actions.json` inside the triggers folder.  Like the other entries, you will need to specify a name, a description, and a set of attributes or fields that the trigger requires or may use.  The trigger action and attributes will be automatically displayed the next time you reload your interface scripts.
 
 Once you have added the necessary information to `actions.json`, you must create your module script, which will need to be placed inside `triggers/modules/`.  You may look at the already existing modules for an example on how to implement your module.
 
+Extra Information
+-------
+
+ - All modules have access to the position of the trigger that caused them to be invoked through accessing `userdata.trigger_position`
