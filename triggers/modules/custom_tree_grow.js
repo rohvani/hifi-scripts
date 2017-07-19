@@ -36,7 +36,7 @@ var wallPiecesLocation = { "x": -9.27122, "y": -1.88673, "z": 12.9915 };
 var newWallProperties = {
   "collidesWith": "static,dynamic,kinematic,myAvatar,otherAvatar",
   "dynamic": 1,
-  "gravity": { "x": 0, "y": -2.0, "z": 0 },
+  "gravity": { "x": 0, "y": -9.8, "z": 0 },
   "velocity": { "x": 0.0, "y": 10.0, "z": 10.0 }
 };
 
