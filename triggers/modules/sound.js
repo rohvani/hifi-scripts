@@ -14,8 +14,8 @@
 */
 
 module.exports.performAction = function(userdata) {
-  Audio.playSound(userdata.audio_url, {
-    position: Entities.getEntityProperties(userdata.position_uuid, ["position"]).position;,
-    localOnly: false
-  });
+  var pos = Entities.getEntityProperties(userdata.position_uuid, ["position"]).position;
+  var sound = SoundCache.getSound(userdata.audio_url);
+  
+  Audio.playSound(sound, { position: pos, localOnly: false });
 }

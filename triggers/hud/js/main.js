@@ -25,7 +25,7 @@ var controller = {
     
     // use dropdown hack
     data.selectedAction = data.actions.filter(function(element){ 
-      return element.name === $("#selectedAction").find("span")[0].innerHTML;
+      return element.display_name === $("#selectedAction").find("span")[0].innerHTML;
     })[0];
     // end hack
   },
@@ -182,6 +182,7 @@ function main() {
     data.actions = [
       {
         "name":"spawner",
+        "display_name":"Spawner",
         "description":"spawns an object when zone is entered",
         "attributes": [
           {
@@ -196,6 +197,7 @@ function main() {
       },
       {
         "name":"sound",
+        "display_name":"Sound",
         "description":"plays a sound when zone is entered",
         "attributes": [
           {

@@ -2,7 +2,8 @@
   "actions" : [
     {
       "name":"spawner",
-      "description":"spawns an object when zone is entered",
+      "display_name":"Spawner",
+      "description":"Spawns an object when the zone is entered",
       "attributes": [
         {
           "name":"object_url",
@@ -21,7 +22,8 @@
     },
     {
       "name":"sound",
-      "description":"plays a sound when zone is entered",
+      "display_name":"Sound",
+      "description":"Plays a sound when the zone is entered",
       "attributes": [
         {
           "name":"audio_url",
@@ -34,34 +36,9 @@
       ]
     },
     {
-      "name":"registration_modifier",
-      "description":"modifies the registration of an object when zone is entered",
-      "attributes": [
-        {
-          "name":"object_uuid",
-          "description":"UUID of the entity that you would like to modify"
-        },
-        {
-          "name":"speed",
-          "description":"time we spend transforming our registration, i.e. how long it takes to completely finish moving"
-        },
-        {
-          "name":"registration_x",
-          "description":"registration x (float)"
-        },
-        {
-          "name":"registration_y",
-          "description":"registration y (float)"
-        },
-        {
-          "name":"registration_z",
-          "description":"registration z (float)"
-        }
-      ]
-    },
-    {
       "name":"custom_tree_grow",
-      "description":"custom script for comicon video",
+      "display_name":"(Custom) Tree Grow and Castle Explode",
+      "description":"A custom script used in a video for comicon",
       "attributes": [
         {
           "name":"position_uuid",
