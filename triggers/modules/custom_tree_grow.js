@@ -31,8 +31,9 @@ var spawner = "";
 var treeInterval = null;
 
 var wallPiecesSearchDistance = 20.0;
-var wallPiecesName = "AnimatedModel";
-var wallPiecesLocation = { "x": -9.27122, "y": -1.88673, "z": 12.9915 };
+var wallPiecesSearchName = "AnimatedModel";
+var wallPiecesSearchLocation = { "x": -9.27122, "y": -1.88673, "z": 12.9915 };
+
 var newWallProperties = {
   "collidesWith": "static,dynamic,kinematic,myAvatar,otherAvatar",
   "dynamic": 1,
@@ -59,24 +60,24 @@ function destroyTree() {
 }
 
 function createNextTree() {
-  initialTreeProperties.modelURL = trees[stage];
-  var ent = Entities.addEntity(initialTreeProperties);
-  adjustPositionRelativeToHeight(ent);
-  return ent;
+  destroyTree();
+  initialTreeProperties.modelURL = trees[++stage];
+  tree = Entities.addEntity(initialTreeProperties);
+  adjustPositionRelativeToHeight(tree);
 }
 
-function grow(entity) {
+function grow() {
   if(stage < (trees.length - 1)) {
-    stage++;
-    destroyTree();
-    tree = createNextTree();
-    
+    createNextTree();
+    // if we've reached the final stage we should go ahead and 
+    // make the castle (in polyworld) blow up and then get rid
+    // of our setInterval
     if (stage == (trees.length - 1)) {
-      var entities = Entities.findEntities(wallPiecesLocation, wallPiecesSearchDistance);
+      var entities = Entities.findEntities(wallPiecesSearchLocation, wallPiecesSearchDistance);
       
       for (var i = 0; i < entities.length; i++) {
         var name = Entities.getEntityProperties(entities[i], ["name"]).name;
-        if (name === wallPiecesName) {
+        if (name === wallPiecesSearchName) {
           Entities.editEntity(entities[i], newWallProperties);
         }
       }
