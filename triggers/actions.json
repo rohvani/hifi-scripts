@@ -58,6 +58,16 @@
           "description":"registration z (float)"
         }
       ]
+    },
+    {
+      "name":"custom_tree_grow",
+      "description":"custom script for comicon video",
+      "attributes": [
+        {
+          "name":"position_uuid",
+          "description":"UUID of the entity to place the tree at"
+        }
+      ]
     }
   ]
 }
