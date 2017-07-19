@@ -13,45 +13,31 @@
 */
 
 var stage = 0;
-
 var timeToGrow = 2000; //msec
 var trees = [
   "https://hifi-content.s3.amazonaws.com/ozan/dev/sets/bitGem/polygon_knights/props/tree_dead_small.fbx",
   "https://hifi-content.s3.amazonaws.com/ozan/dev/sets/bitGem/polygon_knights/props/tree_dead_medium.fbx",
   "https://hifi-content.s3.amazonaws.com/ozan/dev/sets/bitGem/polygon_knights/props/tree_dead_big.fbx"
 ];
-var treeHeights = [
-  4.2578,
-  6.5748,
-  10.4070
-]
-
+var treeHeights = [ 4.2578, 6.5748, 10.4070 ];
 var initialTreeProperties = {  
-  "modelURL": trees[stage],
   "shapeType": "simple-hull",
-  "type": "Model"
+  "type": "Model",
+  "lifetime": 5
 };
 
 var tree = "";
 var spawner = "";
+var treeInterval = null;
 
-var wallPieces = [
-  "{3dc3fc47-2a96-4cd7-945d-8764f2234c44}",
-  "{e89e7bd2-a361-4e20-b22c-d893a494622f}",
-  "{3abf5b33-4c90-448b-8b91-a2e403fbd3ed}",
-  "{539293de-0075-4101-8e8a-0bd4b0c06dd9}",
-  "{d0fb7d05-c933-40c8-a7a2-31640fd7e4d3}",
-  "{eb5a80b3-68f4-4cd1-b36a-e5aebf00b34b}",
-  "{3ddd2976-d265-4dfa-a7e1-0ab0ee0f149e}",
-  "{170de3ee-7821-4fd7-b30d-8ae874eb8241}",
-  "{0c0e7829-637f-419b-b4d0-4f5968830ed7}",
-  "{1bae54cf-edef-4805-9c77-76f50f7d3cd0}"
-];
-
+var wallPiecesSearchDistance = 20.0;
+var wallPiecesName = "AnimatedModel";
+var wallPiecesLocation = { "x": -9.27122, "y": -1.88673, "z": 12.9915 };
 var newWallProperties = {
+  "collidesWith": "static,dynamic,kinematic,myAvatar,otherAvatar",
   "dynamic": 1,
-  "gravity": { "x": 0, "y": -9.8, "z": 0 },
-  "velocity": { "x": 0, "y": 1.0, "z": 0 }
+  "gravity": { "x": 0, "y": -2.0, "z": 0 },
+  "velocity": { "x": 0.0, "y": 10.0, "z": 10.0 }
 };
 
 /*    Utility Functions   */
@@ -67,7 +53,9 @@ function adjustPositionRelativeToHeight(entity) {
 
 /*    Tree Functions   */
 function destroyTree() {
-  Entities.deleteEntity(tree);
+  if (tree.length > 0) {
+    Entities.deleteEntity(tree);
+  }
 }
 
 function createNextTree() {
@@ -84,9 +72,16 @@ function grow(entity) {
     tree = createNextTree();
     
     if (stage == (trees.length - 1)) {
-      for (var i = 0; i < wallPieces.length; i++) {
-        Entities.editEntity(wallPieces[i], newWallProperties);
+      var entities = Entities.findEntities(wallPiecesLocation, wallPiecesSearchDistance);
+      
+      for (var i = 0; i < entities.length; i++) {
+        var name = Entities.getEntityProperties(entities[i], ["name"]).name;
+        if (name === wallPiecesName) {
+          Entities.editEntity(entities[i], newWallProperties);
+        }
       }
+      
+      Script.clearInterval(treeInterval);
     }
   }
 }
@@ -95,11 +90,19 @@ function grow(entity) {
 module.exports.performAction = function(userdata) {
   spawner = userdata.position_uuid;
   
+  // reset default properties encase this is a second spawn
+  stage = 0;
+  initialTreeProperties.modelURL = trees[stage];
+  
+  // if the tree was already in the process of growing, lets cancel it
+  destroyTree();
+  Script.clearInterval(treeInterval);
+  
   // update where tree will spawn
   initialTreeProperties.position = Entities.getEntityProperties(spawner, ["position"]).position;
   tree = Entities.addEntity(initialTreeProperties);
   adjustPositionRelativeToHeight(tree);
   
   // start growing buddy
-  Script.setInterval(function() { grow(); }, timeToGrow); 
+  treeInterval = Script.setInterval(function() { grow(); }, timeToGrow); 
 }
