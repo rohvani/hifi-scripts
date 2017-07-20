@@ -16,8 +16,13 @@
   }
   
   function getUserData() {
-    var props = Entities.getEntityProperties(_this.entityID);
-    return JSON.parse(props.userData);
+    var userdata = JSON.parse(Entities.getEntityProperties(_this.entityID).userData);
+    
+    // inherented userdata
+    var pos = Entities.getEntityProperties(_this.entityID, ["position"]).position;
+    userdata.properties.trigger_position = pos;
+    
+    return userdata;
   }
   
   function getActionName() {
@@ -25,16 +30,6 @@
     // files outside our modules directory
     var properties = getUserData();
     return properties.name;
-  }
-  
-  function getActionProperties() {
-    var userdata = getUserData();
-    
-    // inherented userdata
-    var pos = Entities.getEntityProperties(_this.entityID, ["position"]).position;
-    userdata.properties.trigger_position = pos;
-    
-    return userdata.properties;
   }
 
   function Trigger() {
@@ -47,8 +42,7 @@
       _this.entityID = id;
     },
     
-    unload: function() {
-    },
+    unload: function() { },
     
     enterEntity: function(entityID) {
       _this.triggerAction();
