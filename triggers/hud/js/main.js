@@ -33,13 +33,13 @@ var controller = {
   createTrigger: function(e, model) {
     var customizedTrigger = { };
     customizedTrigger.name = data.selectedAction.name;
+    customizedTrigger.extra_objects = data.selectedAction.extra_objects;
     customizedTrigger.properties = { };
     
     // grab values for all the attributes for this trigger type
     for (var i in data.selectedAction.attributes) {
       var attribute = { };
       attribute.name = data.selectedAction.attributes[i].name;
-      
       // make sure that this is a real attribute that we've grabbed...
       if (attribute.name.length > 0) {
         attribute.value = $("#" + attribute.name).val();
@@ -157,7 +157,6 @@ function replaceDropdowns() {
 }
 // end hack
 
-
 function main() {
   
   try {
@@ -183,30 +182,33 @@ function main() {
       {
         "name":"spawner",
         "display_name":"Spawner",
-        "description":"spawns an object when zone is entered",
+        "description":"Spawns an object when the zone is entered",
         "attributes": [
           {
             "name":"object_url",
-            "description":"URL to JSON that describes what to spawn",
+            "description":"URL to JSON that describes what to spawn"
           },
           {
-            "name":"position_uuid",
-            "description":"UUID of the entity to spawn the object at",
+            "name":"lifetime",
+            "description":"How long the entity should exist after being spawned (sec, -1 for none)",
+            "default":"-1"
           }
-        ]
+        ],
+          "extra_objects": [
+            { 
+              name:"Object Spawner", 
+              description:"object representing where the entity will be spawned"
+            }
+          ]
       },
       {
         "name":"sound",
         "display_name":"Sound",
-        "description":"plays a sound when zone is entered",
+        "description":"Plays a sound when the zone is entered",
         "attributes": [
           {
             "name":"audio_url",
-            "description":"URL to audio file to be played",
-          },
-          {
-            "name":"position_uuid",
-            "description":"UUID of the entity to play the sound at",
+            "description":"URL to audio file to be played"
           }
         ]
       }

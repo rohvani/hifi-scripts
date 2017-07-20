@@ -45,13 +45,24 @@
       </div>
       
       <hr>
-      
       <div rv-show="data.selectedAction.name" id="actionCustomizer">
-      
-        <h2>{data.selectedAction.display_name}</h2>
-        <h4>{data.selectedAction.description}</h4>
-        <hr>
+        <h2 rv-text="data.selectedAction.display_name"></h2>
+        <h4 rv-text="data.selectedAction.description"></h4>
+
+        <div rv-show="data.selectedAction.extra_objects"> 
+          <br>
+          <p>This trigger action will spawn additional objects for you to adjust, these are their names:</p>
+          <br>
+          <ul>
+            <li rv-each-object="data.selectedAction.extra_objects">
+              <b rv-text="object.name"></b>
+              <br>
+              <span rv-text="object.description"></span>
+            </li>
+          </ul>
+        </div>
         
+        <hr>
         <span rv-each-attribute="data.selectedAction.attributes">
           <b rv-text="attribute.name"></b><br>
           <span rv-text="attribute.description"></span>
@@ -61,9 +72,7 @@
         <center>
           <input type="button" class="blue createTrigger" value="Create" rv-on-click="controller.createTrigger">
         </center>
-        
       </div>
-      
       
     </div>
     

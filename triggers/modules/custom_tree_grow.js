@@ -8,8 +8,9 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 */
 
-/* userdata:
-    position_uuid
+/*
+  userdata.extra_objects:
+    "Tree Spawner"
 */
 
 var stage = 0;
@@ -32,7 +33,7 @@ var treeInterval = null;
 
 var wallPiecesSearchDistance = 20.0;
 var wallPiecesSearchName = "AnimatedModel";
-var wallPiecesSearchLocation = { "x": -9.27122, "y": -1.88673, "z": 12.9915 };
+var wallPiecesSearchLocation = { "x": 0, "y": 0, "z": 0 };
 
 var newWallProperties = {
   "collidesWith": "static,dynamic,kinematic,myAvatar,otherAvatar",
@@ -89,7 +90,10 @@ function grow() {
 
 /*    Module Function   */
 module.exports.performAction = function(userdata) {
-  spawner = userdata.position_uuid;
+  spawner = userdata.extra_objects["Tree Spawner"];
+  
+  var spawnerPosition = Entities.getEntityProperties(spawner, ["position"]).position;
+  wallPiecesSearchLocation = spawnerPosition;
   
   // reset default properties incase this is a second spawn
   stage = 0;
@@ -100,7 +104,7 @@ module.exports.performAction = function(userdata) {
   Script.clearInterval(treeInterval);
   
   // update where tree will spawn
-  initialTreeProperties.position = Entities.getEntityProperties(spawner, ["position"]).position;
+  initialTreeProperties.position = spawnerPosition;
   tree = Entities.addEntity(initialTreeProperties);
   adjustPositionRelativeToHeight(tree);
   

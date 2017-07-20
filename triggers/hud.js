@@ -38,7 +38,35 @@
   
   function createTrigger(customizedTrigger) {
     
-    var properties = {                                
+    var spawnPosition = MyAvatar.position;
+    var extraObjectPosition = MyAvatar.position;
+    
+    // if we were given extra objects to spawn, we should go ahead and do those
+    if (typeof customizedTrigger.extra_objects !== "undefined") {
+       var extraObjectProperties = {
+        "type": 'Box',
+        "shapeType": 'box',
+        "color": { "blue": 0, "green": 0, "red": 255 }
+      }
+      
+      var newExtraObjects = { };
+    
+      for (var i = 0; i < customizedTrigger.extra_objects.length; i++) {
+        extraObjectPosition.y += 0.25;
+        
+        var extraObject = customizedTrigger.extra_objects[i];
+        extraObjectProperties.name = extraObject.name;
+        extraObjectProperties.description = extraObject.description;
+        extraObjectProperties.position = extraObjectPosition;
+        
+        newExtraObjects[extraObject.name] = Entities.addEntity(extraObjectProperties);
+      }
+      
+      // replace our descriptions of extra objects to be the spawned extra objects
+      customizedTrigger.extra_objects = newExtraObjects;
+    }
+    
+    var triggerProperties = {                                
       "type": 'Box',
       "shapeType": 'box',
 
@@ -48,11 +76,11 @@
       "script" : triggerScript,
       "collidesWith": "",
       "collisionMask": 0,
-      "position": MyAvatar.position,
+      "position": spawnPosition,
       "userData": JSON.stringify(customizedTrigger)
     };
     
-    var zoneTrigger = Entities.addEntity(properties);
+    var zoneTrigger = Entities.addEntity(triggerProperties);
   }
  
   function onWebEventReceived(event) {

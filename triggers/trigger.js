@@ -57,7 +57,7 @@
     triggerAction: function() {
       /*  Script modules will take a userdata object containing the necesscary attributes to perform */
       var script = getScriptModule();
-      script.performAction(getActionProperties());
+      script.performAction(getUserData());
     }
   };
 

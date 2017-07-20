@@ -10,13 +10,15 @@
           "description":"URL to JSON that describes what to spawn"
         },
         {
-          "name":"position_uuid",
-          "description":"UUID of the entity to spawn the object at"
-        },
-        {
           "name":"lifetime",
           "description":"How long the entity should exist after being spawned (sec, -1 for none)",
           "default":"-1"
+        }
+      ],
+      "extra_objects": [
+        { 
+          "name":"Object Spawner", 
+          "description":"object representing where the entity will be spawned"
         }
       ]
     },
@@ -28,10 +30,12 @@
         {
           "name":"audio_url",
           "description":"URL to audio file to be played"
-        },
-        {
-          "name":"position_uuid",
-          "description":"UUID of the entity to play the sound at"
+        }
+      ],
+      "extra_objects": [
+        { 
+          "name":"Audio Player", 
+          "description":"object representing where the sound will be played"
         }
       ]
     },
@@ -39,10 +43,11 @@
       "name":"custom_tree_grow",
       "display_name":"(Custom) Tree Grow and Castle Explode",
       "description":"A custom script used in a video for comicon",
-      "attributes": [
-        {
-          "name":"position_uuid",
-          "description":"UUID of the entity to place the tree at"
+      "attributes": [ ],
+      "extra_objects": [
+        { 
+          "name":"Tree Spawner", 
+          "description":"object representing where the tree will be spawned"
         }
       ]
     }

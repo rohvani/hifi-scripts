@@ -8,17 +8,23 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 */
 
-/* userdata:
+/* 
+  userdata.properties:
     object_url,
-    position_uuid,
     lifetime
+    
+  userdata.extra_objects:
+    "Object Spawner"
 */
 
 module.exports.performAction = function(userdata) {
-  var json = Script.require(userdata.object_url);
+  var properties = userdata.properties;
+  var objects = userdata.extra_objects;
   
-  json.position = Entities.getEntityProperties(userdata.position_uuid, ["position"]).position;
-  json.lifetime = userdata.lifetime;
+  var json = Script.require(properties.object_url);
+  
+  json.position = Entities.getEntityProperties(objects["Object Spawner"], ["position"]).position;
+  json.lifetime = properties.lifetime;
   
   var ent = Entities.addEntity(json);
 }

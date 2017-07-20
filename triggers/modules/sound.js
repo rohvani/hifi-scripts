@@ -8,14 +8,17 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 */
 
-/* userdata:
-    audio_url,
-    position_uuid
+/*
+  userdata.properties:
+    audio_url
+    
+   userdata.extra_objects:
+    "Audio Player"
 */
 
 module.exports.performAction = function(userdata) {
-  var pos = Entities.getEntityProperties(userdata.position_uuid, ["position"]).position;
-  var sound = SoundCache.getSound(userdata.audio_url);
+  var pos = Entities.getEntityProperties(userdata.extra_objects["Audio Player"], ["position"]).position;
+  var sound = SoundCache.getSound(userdata.properties.audio_url);
   
   Audio.playSound(sound, { position: pos, localOnly: false });
 }
