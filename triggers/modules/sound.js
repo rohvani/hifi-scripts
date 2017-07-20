@@ -16,7 +16,7 @@
     "Audio Player"
 */
 
-module.exports.performAction = function(userdata) {
+module.exports.onEnter = function(userdata) {
   var pos = Entities.getEntityProperties(userdata.extra_objects["Audio Player"], ["position"]).position;
   var sound = SoundCache.getSound(userdata.properties.audio_url);
   

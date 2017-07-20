@@ -37,7 +37,6 @@
   }
 
   Trigger.prototype = {
-    
     preload: function(id) {
       _this.entityID = id;
     },
@@ -45,13 +44,17 @@
     unload: function() { },
     
     enterEntity: function(entityID) {
-      _this.triggerAction();
+      var script = getScriptModule();
+      if (script.onEnter) {
+        script.onEnter(getUserData());
+      }
     },
     
-    triggerAction: function() {
-      /*  Script modules will take a userdata object containing the necesscary attributes to perform */
+    leaveEntity: function(entityID) {
       var script = getScriptModule();
-      script.performAction(getUserData());
+      if (script.onLeave) {
+        script.onLeave(getUserData());
+      }
     }
   };
 

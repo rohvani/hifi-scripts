@@ -13,6 +13,11 @@
           "name":"lifetime",
           "description":"How long the entity should exist after being spawned (sec, -1 for none)",
           "default":"-1"
+        },
+        {
+          "name":"cleanup",
+          "description":"Remove object upon leaving zone (0 for false, 1 for true)",
+          "default":"0"
         }
       ],
       "extra_objects": [

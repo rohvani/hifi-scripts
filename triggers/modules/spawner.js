@@ -11,13 +11,19 @@
 /* 
   userdata.properties:
     object_url,
-    lifetime
+    lifetime,
+    cleanup
     
   userdata.extra_objects:
     "Object Spawner"
 */
 
-module.exports.performAction = function(userdata) {
+var CLEANUP_TRUE_STRING = "1";
+var CLEANUP_FALSE_STRING = "0";
+
+var entity = "";
+
+module.exports.onEnter = function(userdata) {
   var properties = userdata.properties;
   var objects = userdata.extra_objects;
   
@@ -26,5 +32,11 @@ module.exports.performAction = function(userdata) {
   json.position = Entities.getEntityProperties(objects["Object Spawner"], ["position"]).position;
   json.lifetime = properties.lifetime;
   
-  var ent = Entities.addEntity(json);
+  entity = Entities.addEntity(json);
+}
+
+module.exports.onLeave = function(userdata) {
+  if (userdata.properties.cleanup === CLEANUP_TRUE_STRING) {
+    Entities.deleteEntity(entity);
+  }
 }

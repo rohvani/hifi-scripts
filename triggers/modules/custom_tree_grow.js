@@ -14,7 +14,7 @@
 */
 
 var stage = 0;
-var timeToGrow = 500; //msec
+var timeToGrow = 200; //msec
 var trees = [
   "https://hifi-content.s3.amazonaws.com/ozan/dev/sets/bitGem/polygon_knights/props/tree_dead_small.fbx",
   "https://hifi-content.s3.amazonaws.com/ozan/dev/sets/bitGem/polygon_knights/props/tree_dead_medium.fbx",
@@ -89,7 +89,7 @@ function grow() {
 }
 
 /*    Module Function   */
-module.exports.performAction = function(userdata) {
+module.exports.onEnter = function(userdata) {
   spawner = userdata.extra_objects["Tree Spawner"];
   
   var spawnerPosition = Entities.getEntityProperties(spawner, ["position"]).position;
