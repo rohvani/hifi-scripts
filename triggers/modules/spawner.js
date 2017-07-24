@@ -18,25 +18,27 @@
     "Object Spawner"
 */
 
-var CLEANUP_TRUE_STRING = "1";
-var CLEANUP_FALSE_STRING = "0";
-
-var entity = "";
+var entities = [];
 
 module.exports.onEnter = function(userdata) {
   var properties = userdata.properties;
   var objects = userdata.extra_objects;
+  var position = Entities.getEntityProperties(objects["Object Spawner"], ["position"]).position;
   
-  var json = Script.require(properties.object_url);
+  Clipboard.importEntities(properties.object_url);
+  entities = Clipboard.pasteEntities(position);
   
-  json.position = Entities.getEntityProperties(objects["Object Spawner"], ["position"]).position;
-  json.lifetime = properties.lifetime;
-  
-  entity = Entities.addEntity(json);
+  if (properties.lifetime > 0) {
+    for (var i = 0; i < entities.length; i++) {
+      Entities.editEntity(entities[i], { "lifetime": properties.lifetime });
+    }
+  }
 }
 
 module.exports.onLeave = function(userdata) {
-  if (userdata.properties.cleanup === CLEANUP_TRUE_STRING) {
-    Entities.deleteEntity(entity);
+  if (userdata.properties.cleanup == true) {
+    for (var i = 0; i < entities.length; i++) {
+      Entities.deleteEntity(entities[i]);
+    }
   }
 }

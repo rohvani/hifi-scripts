@@ -1,47 +1,51 @@
 {
-  "clientOnly": 0,
-  "collisionsWillMove": 1,
-  "created": "2017-04-24T20:32:04Z",
-  "dimensions": {
-      "x": 0.27448216080665588,
-      "y": 0.52153080701828003,
-      "z": 0.2457675039768219
-  },
-  "dynamic": 1,
-  "gravity": {
-      "x": 0,
-      "y": -9,
-      "z": 0
-  },
-  "id": "{a250e812-5117-41ae-b03f-71a31182ddbc}",
-  "lastEdited": 1500056420632327,
-  "lastEditedBy": "{796054bd-f144-44c5-9cd7-11571c583c29}",
-  "modelURL": "http://hifi-content.s3.amazonaws.com/caitlyn/dev/scratch/plumbus.fbx",
-  "name": "Plumbus",
-  "owningAvatarID": "{00000000-0000-0000-0000-000000000000}",
-  "queryAACube": {
-      "scale": 0.63854247331619263,
-      "x": -0.31927123665809631,
-      "y": -0.31927123665809631,
-      "z": -0.31927123665809631
-  },
-  "rotation": {
-      "w": 0.60793471336364746,
-      "x": -0.26564431190490723,
-      "y": -0.26024264097213745,
-      "z": -0.70156407356262207
-  },
-  "gravity": {
-    "x": 0,
-    "y": -9.8,
-    "z": 0
-  },
-  "velocity": {
-    "x": 0,
-    "y": -9.8,
-    "z": 0
-  },
-  "shapeType": "simple-hull",
-  "type": "Model",
-  "userData": "{\"grabbableKey\":{\"grabbable\":true}}"
+  "Entities": [
+    {
+      "clientOnly": 0,
+      "collisionsWillMove": 1,
+      "created": "2017-04-24T20:32:04Z",
+      "dimensions": {
+          "x": 0.27448216080665588,
+          "y": 0.52153080701828003,
+          "z": 0.2457675039768219
+      },
+      "dynamic": 1,
+      "gravity": {
+          "x": 0,
+          "y": -9,
+          "z": 0
+      },
+      "id": "{a250e812-5117-41ae-b03f-71a31182ddbc}",
+      "lastEdited": 1500056420632327,
+      "lastEditedBy": "{796054bd-f144-44c5-9cd7-11571c583c29}",
+      "modelURL": "http://hifi-content.s3.amazonaws.com/caitlyn/dev/scratch/plumbus.fbx",
+      "name": "Plumbus",
+      "owningAvatarID": "{00000000-0000-0000-0000-000000000000}",
+      "queryAACube": {
+          "scale": 0.63854247331619263,
+          "x": -0.31927123665809631,
+          "y": -0.31927123665809631,
+          "z": -0.31927123665809631
+      },
+      "rotation": {
+          "w": 0.60793471336364746,
+          "x": -0.26564431190490723,
+          "y": -0.26024264097213745,
+          "z": -0.70156407356262207
+      },
+      "gravity": {
+        "x": 0,
+        "y": -9.8,
+        "z": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": -9.8,
+        "z": 0
+      },
+      "shapeType": "simple-hull",
+      "type": "Model",
+      "userData": "{\"grabbableKey\":{\"grabbable\":true}}"
+    }
+  ]
 }
