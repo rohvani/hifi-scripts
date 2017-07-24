@@ -12,13 +12,15 @@ Notes:
 
  1. Due to a limitation of High Fidelity's scripting API, a zone is only triggered by an avatar entity entering the cube that defines the zone trigger.  Additionally, for an avatar to be counted as being inside the cube, the center of the avatar must be within the cube.
  
- 2. Some modules require existing objects, for example, the `spawner` and `sound` modules will grab the position of an object specified by their UUID to use for where to spawn an object or play a sound.  In order to satisfy this, simply create a new object with the `CREATE` tool and copy its UUID (either during the trigger creation process or via editing the zone trigger's `userdata` through the `CREATE` tool.)
+ 2. Some modules require existing objects, for example, the `spawner` and `sound` modules will grab the position of an object specified by their UUID to use for where to spawn an object or play a sound. 
+
+ 3. For the `spawner` module, you will be asked for a URL to JSON describing what to spawn.  You may obtain this by using the `CREATE` tool and exporting what you would like to spawn, be sure to upload the JSON somewhere so that the trigger can access it.
 
 Using a Module
 -------
 By default, the zone trigger tool comes with several prebuilt generic modules (such as a spawner and sound player).  You may notice that some of these modules ask for the UUID of an object to use as a position, presently, we use this as an easier method for customizing your zone trigger instead of requiring you to input a set of coordinates.
 
-Through the zone trigger tool, after you have filled out all the attributes, clicking the `CREATE` button will cause a small white cube to appear near your avatar.  This white cube defines not only the trigger, but also the area which the trigger will react to.  You should resize and position the cube as necessary.
+Through the zone trigger tool, after you have filled out all the attributes, clicking the `CREATE` button will cause a small white cube to appear near your avatar.  This white cube defines not only the trigger, but also the area which the trigger will react to.  You should resize and position the cube as necessary.  You may also want to make the cube invisible once you have finished resizing and positioning it.
 
 If there were any attributes that you forgot to fill or filled in incorrectly, you may change them via opening the `CREATE` tool and viewing the entity properties for the white cube mentioned above.  The attributes will be found in the user data, there the attributes and their values can be changed.
 
@@ -37,4 +39,4 @@ Once you have added the necessary information to `actions.json`, you must create
 Extra Information
 -------
 
- - All modules have access to the position of the trigger that caused them to be invoked through accessing `userdata.trigger_position`
+ - All modules have access to the position of the trigger that caused them to be invoked through accessing `userdata.properties.trigger_position`
