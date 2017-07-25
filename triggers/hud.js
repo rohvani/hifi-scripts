@@ -43,7 +43,7 @@
     
     // if we were given extra objects to spawn, we should go ahead and do those
     if (typeof customizedTrigger.extra_objects !== "undefined") {
-       var extraObjectProperties = {
+      var extraObjectProperties = {
         "type": 'Box',
         "shapeType": 'box',
         "color": { "blue": 0, "green": 0, "red": 255 }
