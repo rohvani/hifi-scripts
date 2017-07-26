@@ -18,8 +18,8 @@
   
   var HACKY_SACK_CHANNEL_NAME = "com.highfidelity.hackysack";
   
-  var HACKY_SACK_MAX_DISTANCE = 2.5;              // meters
-  var HACKY_SACK_SPAWN_OFFSET = { x: 0.0, y: 0.0, z: 0.0 };
+  var HACKY_SACK_MAX_DISTANCE = 5.5;              // meters
+  var HACKY_SACK_SPAWN_OFFSET = { x: 0.0, y: -0.5, z: 0.0 };
   
   var HACKY_SACK_PROPERTIES = {
     "collisionsWillMove": 1,
@@ -45,7 +45,7 @@
   };
   var HACKY_SACK_SCOREBOARD = {
      "backgroundColor": { "blue": 64, "green": 64, "red": 64 },
-     "dimensions": { "x": 1.0, "y": 0.4, "z": 0.01 },
+     "dimensions": { "x": 2.0, "y": 1.0, "z": 0.01 },
      "text": "",
      "type": "Text",
      "userData": "{\"grabbableKey\":{\"grabbable\":false}}"
@@ -62,19 +62,23 @@
   
   var score = 0;
   var scoreMultiplier = 0;
-  var longestStreak = 0;
+  var longestPersonalStreak = 0;
+  var longestPassStreak = 0;
   
   function createHackySack() {
+    HACKY_SACK_PROPERTIES.position = Vec3.sum(_this.getPosition(), HACKY_SACK_SPAWN_OFFSET);
     hackySack = Entities.addEntity(HACKY_SACK_PROPERTIES);
-    moveHackySackToOrigin();
   }
   
-  function updateLeaderboard() {
-    Entities.editEntity(scoreboard, {
-      text: "Score:           " + score + "\n" +
-            "Multiplier:      " + scoreMultiplier + "\n" +
-            "Longest Streak:  " + longestStreak
-    });
+  function moveHackySackToOrigin() {
+    Entities.deleteEntity(hackySack);
+    createHackySack();
+  }
+  
+  function checkIfHackySackLeft() {
+    var hackySackPosition = Entities.getEntityProperties(hackySack, ["position"]).position;
+    var distance = Vec3.distance(_this.getPosition(), hackySackPosition);
+    return distance > HACKY_SACK_MAX_DISTANCE;
   }
   
   function createScoreboard() {
@@ -82,15 +86,30 @@
     scoreboard = Entities.addEntity(HACKY_SACK_SCOREBOARD);
   }
   
-  function moveHackySackToOrigin() {
-    var position = _this.getPosition();
-    Entities.editEntity(hackySack, { "position": Vec3.sum(position, HACKY_SACK_SPAWN_OFFSET); } );
+  function updateLeaderboard() {
+    Entities.editEntity(scoreboard, {
+      text: "Score:                       " + score + "\n" +
+            "Multiplier:                  " + scoreMultiplier + "\n" +
+            "Longest Personal Streak:     " + longestPersonalStreak + "\n" +
+            "Longest Pass Streak:         " + longestPassStreak
+    });
   }
   
-  function checkIfHackySackLeft() {
-    var hackySackPosition = Entities.getEntityProperties(hackySack, ["position"]).position;
-    var distance = Vec3.distance(_this.getPosition(), hackySackPosition);
-    return distance > HACKY_SACK_MAX_DISTANCE;
+  function resetGame() {
+    lastHits = { };
+    lastHitter = "";
+    
+    score = 0;
+    scoreMultiplier = 0;
+    longestPersonalStreak = 0;
+    longestPassStreak = 0;
+    
+    Entities.deleteEntity(hackySack);
+  }
+  
+  function getHighScore() {
+    var userdata = JSON.parse(Entities.getEntityProperties(_this.entityID).userData);
+    return userdata.highscore ? userdata.highscore : 0;
   }
   
   function getLastHitTime() {
@@ -107,6 +126,11 @@
   Messages.messageReceived.connect(function(channel, message, sender) {
     var data = JSON.parse(message);
     
+    if (data.id !== hackySack) {
+      print("Dropping message due to hackysack ID mismatch: got " + data.id + ", expected " + hackySack);
+      return;
+    }
+    
     switch (data.type) {
       case "hit":
         // find out if this collision is a valid hit from the player
@@ -115,15 +139,21 @@
           
           if (data.hitter !== lastHitter) {
             scoreMultiplier++;
-            longestStreak = 1;
+            longestPersonalStreak = 1;
+            longestPassStreak++;
           } else {
-            longestStreak++;
+            longestPersonalStreak++;
+            longestPassStreak = 1;
           }
           
           score += scoreMultiplier;
           lastHitter = data.hitter;
           print("New score: " + score);
         }
+        break;
+        
+      case "dropped":
+        resetGame();
         break;
         
       default:

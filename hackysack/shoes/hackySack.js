@@ -11,9 +11,11 @@
 (function() {
   var HACKY_SACK_NAME = "HackySack Ball";
   var HACKY_SACK_COLLIDER_NAME = "HackySack Collider";
+  var HACKY_SACK_FLOOR_NAME = "Floor";
   var HACKY_SACK_CHANNEL_NAME = "com.highfidelity.hackysack";
   
   var _this;
+  var dropped = false;
   
   function getNameForEntity(entityID) {
     return Entities.getEntityProperties(entityID, ["name"]).name;
@@ -26,8 +28,16 @@
   
   function getMessageForHit(hitter) {
     return {
+      "id" : _this.entityID,
       "type": "hit",
       "hitter": hitter
+    };
+  }
+  
+  function getMessageForDropped() {
+    return {
+      "id" : _this.entityID,
+      "type": "dropped"
     };
   }
 
@@ -37,6 +47,7 @@
   
   hackySack.prototype = {
     preload: function(id) {
+      _this.entityID = id;
       Messages.subscribe(HACKY_SACK_CHANNEL_NAME);
     },
     
@@ -50,10 +61,19 @@
         entB = temp;
       }
       // alert hackysack server of potential collision
-      if (getNameForEntity(entA) === HACKY_SACK_NAME &&
-          getNameForEntity(entB) === HACKY_SACK_COLLIDER_NAME) {
-        var hitter = getOwnerIDForEntity(entB);
-        Messages.sendMessage(HACKY_SACK_CHANNEL_NAME, JSON.stringify(getMessageForHit(hitter)));
+      if (getNameForEntity(entA) === HACKY_SACK_NAME && !dropped) {
+        switch(getNameForEntity(entB)) {
+          
+          case HACKY_SACK_COLLIDER_NAME:
+            var hitter = getOwnerIDForEntity(entB);
+            Messages.sendMessage(HACKY_SACK_CHANNEL_NAME, JSON.stringify(getMessageForHit(hitter)));
+            break;
+            
+          case HACKY_SACK_FLOOR_NAME:
+            dropped = true;
+            Messages.sendMessage(HACKY_SACK_CHANNEL_NAME, JSON.stringify(getMessageForDropped())); 
+            break;
+        }
       }
     }
   };
