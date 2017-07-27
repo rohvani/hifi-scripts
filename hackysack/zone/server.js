@@ -80,8 +80,12 @@
   
   function checkIfHackySackLeft() {
     var hackySackPosition = Entities.getEntityProperties(hackySack, ["position"]).position;
-    var distance = Vec3.distance(_this.getPosition(), hackySackPosition);
-    return distance > HACKY_SACK_MAX_DISTANCE;
+    
+    // we only care about distance among the xy-plane, not height
+    var v1 = Vec3.multiplyVbyV(hackySackPosition, Vec3.UNIT_XY);
+    var v2 = Vec3.multiplyVbyV(_this.getPosition(), Vec3.UNIT_XY);
+    
+    return Vec3.distance(v1, v2) > HACKY_SACK_MAX_DISTANCE;
   }
   
   function copyVector(v) {
@@ -113,7 +117,7 @@
     }
   }
   
-  function updateLeaderboard() {
+  function updateScoreboard() {
     Entities.editEntity(scoreboard.scoreText, { text: score });
     Entities.editEntity(scoreboard.multiplierText, { text: scoreMultiplier });
     Entities.editEntity(scoreboard.highScoreText, { text: getHighScore() });
@@ -182,7 +186,7 @@
     if (checkIfHackySackLeft()) {
       moveHackySackToOrigin();
     }
-    updateLeaderboard();
+    updateScoreboard();
   }
   
   Messages.messageReceived.connect(function(channel, message, sender) {
