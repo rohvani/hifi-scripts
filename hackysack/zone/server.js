@@ -17,6 +17,7 @@
   var HACKY_SACK_UPDATE_TIMESTEP = 200;           // miliseconds
   
   var HACKY_SACK_CHANNEL_NAME = "com.highfidelity.hackysack";
+  var HACKY_SACK_MESSAGE_PREFIX = "[Hacky Sack] ";
   
   var HACKY_SACK_MAX_DISTANCE = 5.5;              // meters
   var HACKY_SACK_SPAWN_OFFSET = { x: 0.0, y: -0.5, z: 0.0 };
@@ -66,7 +67,6 @@
   var score = 0;
   var scoreMultiplier = 0;
   var personalStreak = 0;
-  var longestPassStreak = 0;
   
   function createHackySack() {
     HACKY_SACK_PROPERTIES.position = Vec3.sum(_this.getPosition(), HACKY_SACK_SPAWN_OFFSET);
@@ -127,7 +127,6 @@
     score = 0;
     scoreMultiplier = 0;
     personalStreak = 0;
-    longestPassStreak = 0;
     
     Entities.deleteEntity(hackySack);
   }
@@ -154,10 +153,7 @@
     return userdata.highstreak ? userdata.highstreak : 0;
   }
   
-function setHighPersonalStreak(newStreak) {
-    
-    print("updating streak " + newStreak + " " + getHighPersonalStreak());
-    
+  function setHighPersonalStreak(newStreak) {
     if (newStreak > getHighPersonalStreak()) {
       var userdata = getUserData();
       userdata.highstreak = newStreak;
@@ -193,7 +189,7 @@ function setHighPersonalStreak(newStreak) {
     var data = JSON.parse(message);
     
     if (data.id !== hackySack) {
-      //print("Dropping message due to hackysack ID mismatch: got " + data.id + ", expected " + hackySack);
+      print(HACKY_SACK_MESSAGE_PREFIX + "Dropping message due to hackysack ID mismatch: got " + data.id + ", expected " + hackySack);
       return;
     }
     
@@ -206,15 +202,13 @@ function setHighPersonalStreak(newStreak) {
           if (data.hitter !== lastHitter) {
             scoreMultiplier++;
             personalStreak = 1;
-            longestPassStreak++;
           } else {
             personalStreak++;
-            longestPassStreak = 1;
           }
         
           score += scoreMultiplier;
           lastHitter = data.hitter;
-          print("New score: " + score);
+          print(HACKY_SACK_MESSAGE_PREFIX + "New score: " + score);
           
           setHighPersonalStreak(personalStreak);
           setHighScore(score);
@@ -226,7 +220,7 @@ function setHighPersonalStreak(newStreak) {
         break;
         
       default:
-        print("Unknown message type received: " + data.type);
+        print(HACKY_SACK_MESSAGE_PREFIX + "Unknown message type received: " + data.type);
         break;
     }
   });
