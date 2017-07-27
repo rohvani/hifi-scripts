@@ -14,6 +14,9 @@
   var APP_ICON = Script.resolvePath("./hud/images/icon.png");
   
   var ZONE_TRIGGER_CHANNEL = "zoneTriggers";
+  var ZONE_TRIGGER_MODEL = "http://hifi-content.s3.amazonaws.com/alan/dev/trigger-cube-glow.fbx";
+  var ZONE_TRIGGER_SPAWN_OFFSET = { x: 0.0, y: 0.0, z: 0.0 };
+  var ZONE_TRIGGER_SPAWN_EXTRA_OBJECTS_OFFSET = { x: 0.0, y: 0.0, z: 0.0 };
 
   var actions = Script.require('./actions.json');
   var triggerScript = Script.resolvePath("./trigger.js");
@@ -37,9 +40,9 @@
   }
   
   function createTrigger(customizedTrigger) {
-    
-    var spawnPosition = MyAvatar.position;
-    var extraObjectPosition = MyAvatar.position;
+    var relativeOffset = Vec3.multiplyQbyV(MyAvatar.orientation, ZONE_TRIGGER_SPAWN_OFFSET);
+    var spawnPosition = Vec3.sum(MyAvatar.position, relativeOffset);
+    var extraObjectPosition = Vec3.sum(spawnPosition, ZONE_TRIGGER_SPAWN_EXTRA_OBJECTS_OFFSET);
     
     // if we were given extra objects to spawn, we should go ahead and do those
     if (typeof customizedTrigger.extra_objects !== "undefined") {
@@ -67,8 +70,8 @@
     }
     
     var triggerProperties = {                                
-      "type": 'Box',
-      "shapeType": 'box',
+      "type": "Box",
+      "shapeType": "box",
 
       "name": "Zone Trigger",
       "description": "Created via Zone Editor tool",       
