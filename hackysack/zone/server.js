@@ -70,6 +70,7 @@
   
   function createHackySack() {
     HACKY_SACK_PROPERTIES.position = Vec3.sum(_this.getPosition(), HACKY_SACK_SPAWN_OFFSET);
+    HACKY_SACK_PROPERTIES.userData = JSON.stringify({ "hackySackServerID": _this.entityID });
     hackySack = Entities.addEntity(HACKY_SACK_PROPERTIES);
   }
   
@@ -81,9 +82,9 @@
   function checkIfHackySackLeft() {
     var hackySackPosition = Entities.getEntityProperties(hackySack, ["position"]).position;
     
-    // we only care about distance among the xy-plane, not height
-    var v1 = Vec3.multiplyVbyV(hackySackPosition, Vec3.UNIT_XY);
-    var v2 = Vec3.multiplyVbyV(_this.getPosition(), Vec3.UNIT_XY);
+    // we only care about distance among the xz-plane, not height(y-axis)
+    var v1 = Vec3.multiplyVbyV(hackySackPosition, Vec3.UNIT_XZ);
+    var v2 = Vec3.multiplyVbyV(_this.getPosition(), Vec3.UNIT_XZ);
     
     return Vec3.distance(v1, v2) > HACKY_SACK_MAX_DISTANCE;
   }
@@ -131,8 +132,6 @@
     score = 0;
     scoreMultiplier = 0;
     personalStreak = 0;
-    
-    Entities.deleteEntity(hackySack);
   }
   
   function getHighScore() {
@@ -182,9 +181,17 @@
     return false;
   }
   
+  function getMessageForReset() {
+    return {
+      "id" : _this.entityID,
+      "type": "reset"
+    };
+  }
+  
   function update() {
     if (checkIfHackySackLeft()) {
       moveHackySackToOrigin();
+      resetGame();
     }
     updateScoreboard();
   }
@@ -192,8 +199,12 @@
   Messages.messageReceived.connect(function(channel, message, sender) {
     var data = JSON.parse(message);
     
+    if (channel !== HACKY_SACK_CHANNEL_NAME) {
+      return;
+    }
+    
     if (data.id !== hackySack) {
-      print(HACKY_SACK_MESSAGE_PREFIX + "Dropping message due to hackysack ID mismatch: got " + data.id + ", expected " + hackySack);
+      //print(HACKY_SACK_MESSAGE_PREFIX + "Dropping message due to hackysack ID mismatch: got " + data.id + ", expected " + hackySack);
       return;
     }
     
@@ -221,6 +232,7 @@
         
       case "dropped":
         resetGame();
+        Messages.sendMessage(HACKY_SACK_CHANNEL_NAME, JSON.stringify(getMessageForReset()));
         break;
         
       default:
