@@ -1,0 +1,88 @@
+{
+    "Entities": [
+        {
+            "clientOnly": 0,
+            "color": {
+                "blue": 171,
+                "green": 171,
+                "red": 171
+            },
+            "created": "2017-07-26T19:20:37Z",
+            "dimensions": {
+                "x": 12,
+                "y": 0.20000000298023224,
+                "z": 12
+            },
+            "id": "{190a55c0-2438-486a-966e-d2674aaf83f3}",
+            "lastEdited": 1501196365719342,
+            "lastEditedBy": "{7d3d431b-f861-4aee-868d-a813ac91d6ac}",
+            "name": "Floor",
+            "owningAvatarID": "{00000000-0000-0000-0000-000000000000}",
+            "position": {
+                "x": 7.43865966796875e-05,
+                "y": 0,
+                "z": 0
+            },
+            "queryAACube": {
+                "scale": 16.97174072265625,
+                "x": -8.4857959747314453,
+                "y": -8.485870361328125,
+                "z": -8.485870361328125
+            },
+            "rotation": {
+                "w": 1,
+                "x": -1.52587890625e-05,
+                "y": -1.52587890625e-05,
+                "z": -1.52587890625e-05
+            },
+            "shape": "Cube",
+            "type": "Box",
+            "userData": "{\"grabbableKey\":{\"grabbable\":false}}"
+        },
+        {
+            "clientOnly": 0,
+            "collisionless": 1,
+            "color": {
+                "blue": 171,
+                "green": 171,
+                "red": 171
+            },
+            "created": "2017-07-26T22:48:08Z",
+            "dimensions": {
+                "x": 10,
+                "y": 6.1894001960754395,
+                "z": 10
+            },
+            "id": "{157e3ae4-a4c3-4ad9-a1c8-437b1b49a5a6}",
+            "ignoreForCollisions": 1,
+            "lastEdited": 1501275483105646,
+            "lastEditedBy": "{d783460f-76f0-4f21-85e8-6a666b243d27}",
+            "name": "HackySackGame",
+            "owningAvatarID": "{00000000-0000-0000-0000-000000000000}",
+            "position": {
+                "x": 0,
+                "y": 3.1764719486236572,
+                "z": 7.43865966796875e-05
+            },
+            "queryAACube": {
+                "scale": 15.437249183654785,
+                "x": -7.7186245918273926,
+                "y": -4.5421524047851562,
+                "z": -7.7185502052307129
+            },
+            "rotation": {
+                "w": 1,
+                "x": -1.52587890625e-05,
+                "y": -1.52587890625e-05,
+                "z": -1.52587890625e-05
+            },
+            "script": "https://cdn.rawgit.com/seefo/hifi-scripts/ef3b108c/hackysack/zone/client.js",
+            "serverScripts": "https://cdn.rawgit.com/seefo/hifi-scripts/ef3b108c/hackysack/zone/server.js",
+            "shape": "Cube",
+            "type": "Box",
+            "userData": "{\"grabbableKey\":{\"grabbable\":true},\"highscore\":0,\"highstreak\":0}",
+            "visible": 0
+        }
+    ],
+    "Version": 70
+}
