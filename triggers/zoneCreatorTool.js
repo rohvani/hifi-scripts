@@ -1,5 +1,5 @@
 /*
-//  hud.js
+//  zoneCreatorTool.js
 //
 //  Created by Robbie Uvanni on 2017-07-17
 //  Copyright 2017 High Fidelity, Inc.
@@ -10,16 +10,17 @@
 
 (function() {
   var APP_NAME = "ZONE EDITOR";
-  var APP_URL  = Script.resolvePath("./hud/page.html");
-  var APP_ICON = Script.resolvePath("./hud/images/icon.png");
+  var APP_URL  = Script.resolvePath("./app/hud/app.html");
+  var APP_ICON = Script.resolvePath("./app/hud/images/icon.png");
   
   var ZONE_TRIGGER_CHANNEL = "zoneTriggers";
   var ZONE_TRIGGER_MODEL = "http://hifi-content.s3.amazonaws.com/alan/dev/trigger-cube-glow.fbx";
-  var ZONE_TRIGGER_SPAWN_OFFSET = { x: 0.0, y: 0.0, z: 0.0 };
+  var ZONE_TRIGGER_COLLISION_MODEL = "http://content.highfidelity.com/DomainContent/production/welcomeWagon/ghostWagon-Cube.obj";
+  var ZONE_TRIGGER_SPAWN_OFFSET = { x: 0.0, y: 0.3, z: -1.0 };
   var ZONE_TRIGGER_SPAWN_EXTRA_OBJECTS_OFFSET = { x: 0.0, y: 0.0, z: 0.0 };
 
-  var actions = Script.require('./actions.json');
-  var triggerScript = Script.resolvePath("./trigger.js");
+  var actions = Script.require('./app/actions.json');
+  var triggerScript = Script.resolvePath("./app/trigger.js");
   
   var tablet = Tablet.getTablet("com.highfidelity.interface.tablet.system");
   var button = tablet.addButton({
@@ -44,6 +45,9 @@
     var spawnPosition = Vec3.sum(MyAvatar.position, relativeOffset);
     var extraObjectPosition = Vec3.sum(spawnPosition, ZONE_TRIGGER_SPAWN_EXTRA_OBJECTS_OFFSET);
     
+    // move spawn position so that the zone touches the floor
+    spawnPosition.y -= (MyAvatar.scale / 2);
+    
     // if we were given extra objects to spawn, we should go ahead and do those
     if (typeof customizedTrigger.extra_objects !== "undefined") {
       var extraObjectProperties = {
@@ -55,7 +59,7 @@
       var newExtraObjects = { };
     
       for (var i = 0; i < customizedTrigger.extra_objects.length; i++) {
-        extraObjectPosition.y += 0.25;
+        extraObjectPosition.y -= 0.25;
         
         var extraObject = customizedTrigger.extra_objects[i];
         extraObjectProperties.name = extraObject.name;
@@ -69,20 +73,24 @@
       customizedTrigger.extra_objects = newExtraObjects;
     }
     
-    var triggerProperties = {                                
-      "type": "Box",
-      "shapeType": "box",
-
+    var triggerProperties = {                 
       "name": "Zone Trigger",
-      "description": "Created via Zone Editor tool",       
+      "description": "Created via Zone Editor tool",
+      "position": spawnPosition,          
 
+      "type": "Model",
+      "modelURL": ZONE_TRIGGER_MODEL,
+      "dimensions": { x: 1.0, y: MyAvatar.scale * 2, z: 1.0 },
+      
+      "shapeType": "compound",
+      "compoundShapeURL": ZONE_TRIGGER_COLLISION_MODEL,
+      "collisionless": 1,
+      "ignoreForCollisions": 1,
+      
       "script" : triggerScript,
-      "collidesWith": "",
-      "collisionMask": 0,
-      "position": spawnPosition,
       "userData": JSON.stringify(customizedTrigger)
     };
-    
+
     var zoneTrigger = Entities.addEntity(triggerProperties);
   }
  

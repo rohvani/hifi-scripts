@@ -4,7 +4,7 @@ A zone trigger allows you to define behavior for when an area defined by an obje
 
 Using Zone Triggers
 -------
-To create a zone trigger, first you must run the `hud.js` script on your interface, this will cause a button to be added to your tablet labeled `ZONE EDITOR`.  Once you are ready to create a zone trigger, click the button, there you will be provided with a UI that will assist you in preparing your zone trigger.
+To create a zone trigger, first you must run the `zoneCreatorTool.js` script on your interface, this will cause a button to be added to your tablet labeled `ZONE EDITOR`.  Once you are ready to create a zone trigger, click the button, there you will be provided with a UI that will assist you in preparing your zone trigger.
 
 Zone triggers may be edited after being created via editing their `userdata` through the `CREATE` tool.  Additionally, you may make your zone invisible, as well as resizing it for the appropriate zone that you desire.  
 
@@ -26,9 +26,9 @@ If there were any attributes that you forgot to fill or filled in incorrectly, y
 
 Technical Details
 -------
-All modules are loaded from `actions.json` by `hud.js`, these are sent to the tablet app webpage (`page.html` and `main.js`) through an event bridge.  Once a trigger has been customized and the `CREATE` button pressed, JSON representing the customized trigger will be sent back over the event bridge to the `hud.js` script.  The `hud.js` script is responsible for creating the zone trigger, giving it the proper userdata, and adding the `trigger.js` script to the zone trigger.
+All modules are loaded from `app/actions.json` by `zoneCreatorTool.js`, these are sent to the tablet app webpage (`app/hud/app.html` and `app/hud/main.js`) through an event bridge.  Once a trigger has been customized and the `CREATE` button pressed, JSON representing the customized trigger will be sent back over the event bridge to the `zoneCreatorTool.js` script.  The `zoneCreatorTool.js` script is responsible for creating the zone trigger, giving it the proper userdata, and adding the `app/trigger.js` script to the zone trigger.
 
-Once the zone trigger has been created in-world, `trigger.js` registers a `enterEntity` callback which is responsible for invoking the assigned module if the zone trigger has been entered by an avatar entity.  `trigger.js` will pass the customized trigger userdata along with some additional inherited (can be found in the Extra Information section) attributes to the module and invoke it's action.
+Once the zone trigger has been created in-world, `trigger.js` registers a `enterEntity` callback which is responsible for invoking the assigned module if the zone trigger has been entered by an avatar entity, `leaveEntity` is also setup for when an avatar leaves an avatar (if functionality for leaveEntity has been defined by the module).  `trigger.js` will pass the customized trigger userdata along with some additional inherited (can be found in the Extra Information section) attributes to the module and invoke it's action.
 
 Creating a Module
 -------
@@ -40,3 +40,4 @@ Extra Information
 -------
 
  - All modules have access to the position of the trigger that caused them to be invoked through accessing `userdata.properties.trigger_position`
+ - Both `onEnter` and `onLeave` are optional for modules, i.e. you may choose to implement just `onLeave` and vice versa for `onEnter`.
