@@ -8,7 +8,7 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 */
 
-var HACKY_SACK_JSON = Script.resolvePath("./hackySackGame.json");
+var HACKY_SACK_JSON = Script.resolvePath("./objects/hackySackGame.json");
 var HACKY_SACK_SPAWN_OFFSET = { x: 0.0, y: 0.0, z: -10.0 };
 
 var relativeOffset = Vec3.multiplyQbyV(MyAvatar.orientation, HACKY_SACK_SPAWN_OFFSET);
