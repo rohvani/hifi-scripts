@@ -76,8 +76,8 @@
                 "y": -1.52587890625e-05,
                 "z": -1.52587890625e-05
             },
-            "script": "https://cdn.rawgit.com/seefo/hifi-scripts/ef3b108c/hackysack/zone/client.js",
-            "serverScripts": "https://cdn.rawgit.com/seefo/hifi-scripts/ef3b108c/hackysack/zone/server.js",
+            "script": "https://cdn.rawgit.com/seefo/hifi-scripts/master/hackysack/zone/client.js",
+            "serverScripts": "https://cdn.rawgit.com/seefo/hifi-scripts/master/hackysack/zone/server.js",
             "shape": "Cube",
             "type": "Box",
             "userData": "{\"grabbableKey\":{\"grabbable\":true},\"highscore\":0,\"highstreak\":0}",
