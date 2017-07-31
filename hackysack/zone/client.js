@@ -13,7 +13,7 @@
 (function() {
   var SECONDS_PER_MINUTE = 60;
   var LIFETIME = SECONDS_PER_MINUTE * 300;
-  var COLLIDERS_VISIBLE = true;
+  var COLLIDERS_VISIBLE = false;
   
   var _this;
   var rezzedEntities = [];
