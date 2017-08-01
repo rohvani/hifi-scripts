@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <script>
+$(document).ready(function () {
+    // hook up a handler for events that come from hifi.
+    EventBridge.scriptEventReceived.connect(function (msg) {
+        print(msg);
+        console.log("AJT: received msg = " + msg);
+        // add available tracked object to selector
+        var selector = $("#puckno");
+        var availableTrackedObjects = JSON.parse(msg);
+        if (Array.isArray(availableTrackedObjects)) {
+            for (var i = 0; i < availableTrackedObjects.length; i++) {
+                selector.append('<option value="' + availableTrackedObjects[i] + '">TrackedObject' + availableTrackedObjects[i] + '</option>');
+            }
+        }
+        selector.trigger("change");
+    });
+
+    $("#create").click(function () {
+        var obj = {cmd: "create"};
+        obj.puckno = $("#puckno").val();
+        EventBridge.emitWebEvent(JSON.stringify(obj));
+    });
+    
+    $("#finalize").click(function () {
+        EventBridge.emitWebEvent(JSON.stringify({cmd: "finalize"}));
+    });
+});
+  </script>
+  <head>
+    <meta charset="utf-8" />
+    <body>
+      <div style="margin:10px">
+        <div class="ui-field-contain">
+          <label for="puckno">Tracked Puck</label>
+          <select name="puckno" id="puckno" data-native-menu="false">
+            <option value="-1">NONE</option>
+          </select>
+        </div>
+        <button id="create" class="ui-btn ui-corner-all">Create Puck</button>
+        <button id="finalize" class="ui-btn ui-corner-all">Finalize Puck</button>
+      </div>
+    </body>
+  </head>
+</html>
