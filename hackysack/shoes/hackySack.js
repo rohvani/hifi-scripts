@@ -49,7 +49,11 @@
   }
   
   Messages.messageReceived.connect(function(channel, message, sender) {
-    var data = JSON.parse(message);
+    try {
+        var data = JSON.parse(message);
+    } catch(e) { 
+        return; 
+    }
     
     if (channel !== HACKY_SACK_CHANNEL_NAME) {
       return;
