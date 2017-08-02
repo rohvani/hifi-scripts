@@ -38,7 +38,7 @@ function onScreenChanged(type, url) {
                 // send available tracked objects to the html running in the tablet.
                 var availableTrackedObjects = getAvailableTrackedObjects();
                 tablet.emitScriptEvent(JSON.stringify(availableTrackedObjects));
-            }, 1000);  // wait 1 sec before sending..
+            }, 1000); // wait 1 sec before sending..
         }
         shown = true;
     } else {
@@ -74,17 +74,17 @@ function getAvailableTrackedObjects() {
 }
 
 function getRelativePosition(origin, rotation, offset) {
-  var relativeOffset = Vec3.multiplyQbyV(rotation, offset);
-  var worldPosition = Vec3.sum(origin, relativeOffset);
-  return worldPosition;
+    var relativeOffset = Vec3.multiplyQbyV(rotation, offset);
+    var worldPosition = Vec3.sum(origin, relativeOffset);
+    return worldPosition;
 }
 function getPropertyForEntity(entityID, propertyName) {
-  return Entities.getEntityProperties(entityID, [propertyName])[propertyName];
+    return Entities.getEntityProperties(entityID, [propertyName])[propertyName];
 }
 function setPropertyForEntity(entityID, propertyName, propertyValue) {
-  var newProperties = { };
-  newProperties[propertyName] = propertyValue;
-  Entities.editEntity(entityID, newProperties);
+    var newProperties = { };
+    newProperties[propertyName] = propertyValue;
+    Entities.editEntity(entityID, newProperties);
 }
 
 var VIVE_PUCK_MODEL = Script.resolvePath("./vive_tracker_puck.obj");
@@ -95,106 +95,106 @@ var trackedPucks = { };
 var lastPuck = { };
 
 function createPuck(puck) {
-  // create a puck entity and add it to our list of pucks
-  var spawnOffset = Vec3.multiply(Vec3.FRONT, 1.0);
-  var spawnPosition = getRelativePosition(MyAvatar.position, MyAvatar.orientation, spawnOffset);
-  
-  // should be an overlay
-  var puckEntityProperties = {
-    "name": "Tracked Puck",
-    "type": "Model",
-    "modelURL": VIVE_PUCK_MODEL,
-    "dimensions": { x: 0.0945, y: 0.0921, z: 0.0423 },
-    "position": spawnPosition,
-    "userData": "{ \"grabbableKey\": { \"grabbable\": true, \"kinematic\": false } }"
-  };
-  
-  var puckEntityID = Entities.addEntity(puckEntityProperties);
-  trackedPucks[puck.puckno] = {
-    "puckEntityID": puckEntityID,
-    "trackedEntityID": ""
-  };
-  lastPuck = trackedPucks[puck.puckno];
+    // create a puck entity and add it to our list of pucks
+    var spawnOffset = Vec3.multiply(Vec3.FRONT, 1.0);
+    var spawnPosition = getRelativePosition(MyAvatar.position, MyAvatar.orientation, spawnOffset);
+
+    // should be an overlay
+    var puckEntityProperties = {
+        "name": "Tracked Puck",
+        "type": "Model",
+        "modelURL": VIVE_PUCK_MODEL,
+        "dimensions": { x: 0.0945, y: 0.0921, z: 0.0423 },
+        "position": spawnPosition,
+        "userData": "{ \"grabbableKey\": { \"grabbable\": true, \"kinematic\": false } }"
+    };
+
+    var puckEntityID = Entities.addEntity(puckEntityProperties);
+    trackedPucks[puck.puckno] = {
+        "puckEntityID": puckEntityID,
+        "trackedEntityID": ""
+    };
+    lastPuck = trackedPucks[puck.puckno];
 }
 function finalizePuck() {
-  // find nearest entity and change its parent to the puck
-  var puckPosition = getPropertyForEntity(lastPuck.puckEntityID, "position");
-  var foundEntities = Entities.findEntities(puckPosition, VIVE_PUCK_SEARCH_DISTANCE);
-  
-  var foundEntity;
-  var leastDistance = 999999; // this should be something like Integer.MAX_VALUE
-  
-  for(var i = 0; i < foundEntities.length; i++) {
-    var entity = foundEntities[i];
-    
-    if (getPropertyForEntity(entity, "name") !== VIVE_PUCK_NAME) {
-      var entityPosition = getPropertyForEntity(entity, "position");
-      var d = Vec3.distance(entityPosition, puckPosition);
-      
-      if (d < leastDistance) {
-        leastDistance = d;
-        foundEntity = entity;
-      }
+    // find nearest entity and change its parent to the puck
+    var puckPosition = getPropertyForEntity(lastPuck.puckEntityID, "position");
+    var foundEntities = Entities.findEntities(puckPosition, VIVE_PUCK_SEARCH_DISTANCE);
+
+    var foundEntity;
+    var leastDistance = 999999; // this should be something like Integer.MAX_VALUE
+
+    for (var i = 0; i < foundEntities.length; i++) {
+        var entity = foundEntities[i];
+
+        if (getPropertyForEntity(entity, "name") !== VIVE_PUCK_NAME) {
+            var entityPosition = getPropertyForEntity(entity, "position");
+            var d = Vec3.distance(entityPosition, puckPosition);
+
+            if (d < leastDistance) {
+                leastDistance = d;
+                foundEntity = entity;
+            }
+        }
     }
-  }
-  
-  if (foundEntity) {
-    lastPuck.trackedEntityID = foundEntity;
-    print('changing parent for ' + lastPuck.trackedEntityID + ' to ' + lastPuck.puckEntityID);
-    print('parents distance is... ' + leastDistance);
-    print('parents name is... ' + getPropertyForEntity(foundEntity, "name"));
-    setPropertyForEntity(lastPuck.trackedEntityID, "parentID", lastPuck.puckEntityID);
-  }  
+
+    if (foundEntity) {
+        lastPuck.trackedEntityID = foundEntity;
+        print('changing parent for ' + lastPuck.trackedEntityID + ' to ' + lastPuck.puckEntityID);
+        print('parents distance is... ' + leastDistance);
+        print('parents name is... ' + getPropertyForEntity(foundEntity, "name"));
+        setPropertyForEntity(lastPuck.trackedEntityID, "parentID", lastPuck.puckEntityID);
+    }    
 }
 function updatePucks() {
-  // for each puck, update its position and orientation
-  for(puck in trackedPucks) {
-    var action = indexToTrackedObjectName(puck);
-    print(action);
-    var pose = Controller.getPoseValue(Controller.Standard[action]);
-    if (pose && pose.valid) {
-      if (trackedPucks[puck].trackedEntityID) {
-        var avatarXform = new Xform(MyAvatar.orientation, MyAvatar.position);
-        var puckXform = new Xform(pose.rotation, pose.translation);
-        var finalXform = Xform.mul(avatarXform, Xform.mul(puckXform, Vec3.ZERO));
-        
-        Entities.editEntity(trackedPucks[puck].puckEntityID, {
-            position: finalXform.pos,
-            rotation: finalXform.rot
-        });
-      } 
+    // for each puck, update its position and orientation
+    for (var puck in trackedPucks) {
+        var action = indexToTrackedObjectName(puck);
+        print(action);
+        var pose = Controller.getPoseValue(Controller.Standard[action]);
+        if (pose && pose.valid) {
+            if (trackedPucks[puck].trackedEntityID) {
+                var avatarXform = new Xform(MyAvatar.orientation, MyAvatar.position);
+                var puckXform = new Xform(pose.rotation, pose.translation);
+                var finalXform = Xform.mul(avatarXform, Xform.mul(puckXform, Vec3.ZERO));
+
+                Entities.editEntity(trackedPucks[puck].puckEntityID, {
+                    position: finalXform.pos,
+                    rotation: finalXform.rot
+                });
+            } 
+        }
     }
-  }
 }
 function destroyPuck(puckName) {
-  // unparent entity and delete its parent
-  var puckEntityID = trackedPucks[puckName].puckEntityID;
-  var trackedEntityID = trackedPucks[puckName].trackedEntityID;
-  
-  Entities.editEntity(trackedEntityID, { "parentID": "{00000000-0000-0000-0000-000000000000}" });
-  Entities.deleteEntity(puckEntityID);
+    // unparent entity and delete its parent
+    var puckEntityID = trackedPucks[puckName].puckEntityID;
+    var trackedEntityID = trackedPucks[puckName].trackedEntityID;
+
+    Entities.editEntity(trackedEntityID, { "parentID": "{00000000-0000-0000-0000-000000000000}" });
+    Entities.deleteEntity(puckEntityID);
 }
 function destroyPucks() {
-  // remove all pucks and unparent entities
-  for(puck in trackedPucks) {
-    destroyPuck(puck);
-  }
+    // remove all pucks and unparent entities
+    for (var puck in trackedPucks) {
+        destroyPuck(puck);
+    }
 }
 
 function onWebEventReceived(msg) {
     var obj = {};
-    
+
     try { 
-      obj = JSON.parse(msg);
+        obj = JSON.parse(msg);
     } catch (err) { 
-      return; 
+        return; 
     }
-    
-    switch(obj.cmd) {
-      case "create":
+
+    switch (obj.cmd) {
+    case "create":
         createPuck(obj);
         break;
-      case "finalize":
+    case "finalize":
         finalizePuck();
         break;
     }
@@ -203,7 +203,7 @@ function onWebEventReceived(msg) {
 Script.update.connect(updatePucks);
 Script.scriptEnding.connect(function () {
     tablet.removeButton(tabletButton);
-    destroyPucks();   
+    destroyPucks();
     if (shown) {
         tablet.webEventReceived.disconnect(onWebEventReceived);
         tablet.gotoHomeScreen();
