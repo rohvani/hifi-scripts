@@ -135,9 +135,6 @@ function finalizePuck() {
 
     if (foundEntity) {
         lastPuck.trackedEntityID = foundEntity;
-        print('changing parent for ' + lastPuck.trackedEntityID + ' to ' + lastPuck.puckEntityID);
-        print('parents distance is... ' + leastDistance);
-        print('parents name is... ' + getPropertyForEntity(foundEntity, "name"));
         Entities.editEntity(lastPuck.trackedEntityID, { "parentID": lastPuck.puckEntityID });
     }    
 }
@@ -145,7 +142,6 @@ function updatePucks() {
     // for each puck, update its position and orientation
     for (var puck in trackedPucks) {
         var action = indexToTrackedObjectName(puck);
-        print(action);
         var pose = Controller.getPoseValue(Controller.Standard[action]);
         if (pose && pose.valid) {
             if (trackedPucks[puck].trackedEntityID) {
