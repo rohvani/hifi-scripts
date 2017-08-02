@@ -81,11 +81,6 @@ function getRelativePosition(origin, rotation, offset) {
 function getPropertyForEntity(entityID, propertyName) {
     return Entities.getEntityProperties(entityID, [propertyName])[propertyName];
 }
-function setPropertyForEntity(entityID, propertyName, propertyValue) {
-    var newProperties = { };
-    newProperties[propertyName] = propertyValue;
-    Entities.editEntity(entityID, newProperties);
-}
 
 var VIVE_PUCK_MODEL = Script.resolvePath("./vive_tracker_puck.obj");
 var VIVE_PUCK_SEARCH_DISTANCE = 1.5; // metres
@@ -143,7 +138,7 @@ function finalizePuck() {
         print('changing parent for ' + lastPuck.trackedEntityID + ' to ' + lastPuck.puckEntityID);
         print('parents distance is... ' + leastDistance);
         print('parents name is... ' + getPropertyForEntity(foundEntity, "name"));
-        setPropertyForEntity(lastPuck.trackedEntityID, "parentID", lastPuck.puckEntityID);
+        Entities.editEntity(lastPuck.trackedEntityID, { "parentID": lastPuck.puckEntityID });
     }    
 }
 function updatePucks() {
