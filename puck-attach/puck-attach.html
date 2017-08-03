@@ -7,14 +7,19 @@
 $(document).ready(function () {
     // hook up a handler for events that come from hifi.
     EventBridge.scriptEventReceived.connect(function (msg) {
-        print(msg);
-        console.log("AJT: received msg = " + msg);
         // add available tracked object to selector
         var selector = $("#puckno");
-        var availableTrackedObjects = JSON.parse(msg);
+        
+        var availableTrackedObjects = data.pucks;
+        var selectedPuck = data.selectedPuck;
+
         if (Array.isArray(availableTrackedObjects)) {
             for (var i = 0; i < availableTrackedObjects.length; i++) {
                 selector.append('<option value="' + availableTrackedObjects[i] + '">TrackedObject' + availableTrackedObjects[i] + '</option>');
+                var selected = (selectedPuck === availableTrackedObjects[i]);
+                if (selected) {
+                    selector.val(availableTrackedObjects[i]);
+                }
             }
         }
         selector.trigger("change");
@@ -29,6 +34,15 @@ $(document).ready(function () {
     $("#finalize").click(function () {
         EventBridge.emitWebEvent(JSON.stringify({cmd: "finalize"}));
     });
+    
+     $("#destroy").click(function () {
+        var obj = {cmd: "destroy"};
+        obj.puckno = $("#puckno").val();
+        EventBridge.emitWebEvent(JSON.stringify(obj));
+    });
+    
+    // let the interface script know we are ready to receive data
+    EventBridge.emitWebEvent(JSON.stringify({cmd: "ready"}));
 });
   </script>
   <head>
@@ -43,6 +57,7 @@ $(document).ready(function () {
         </div>
         <button id="create" class="ui-btn ui-corner-all">Create Puck</button>
         <button id="finalize" class="ui-btn ui-corner-all">Finalize Puck</button>
+        <button id="destroy" class="ui-btn ui-corner-all">Destroy Puck</button>
       </div>
     </body>
   </head>
