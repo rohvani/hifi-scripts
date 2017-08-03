@@ -10,11 +10,10 @@ After opening the tablet app, you will be presented with a drop down of your cur
 
 Once you are satisfied with the placement of the puck, click the `Finalize Puck` button.  Your entity will now be tracked by the selected puck and have its position and orientation updated in real time.
 
-To remove pucks from an entity, simply unload the `puck-attach.js` script, this will remove all pucks and leave the entities where the pucks put them.
+To remove a puck from an entity, simply select the puck from the dropdown where you originally selected it and then press the `Destroy Puck` button.  After pressing the `Destroy Puck` button, the entity will no longer be tracked and will remain in the last position it was tracked to.
 
 
 Requirements
 -------
-
  - HTC Vive
  - At least one HTC Vive Tracker puck
