@@ -120,7 +120,7 @@
   
   function updateScoreboard() {
     Entities.editEntity(scoreboard.scoreText, { text: score });
-    Entities.editEntity(scoreboard.multiplierText, { text: scoreMultiplier });
+    Entities.editEntity(scoreboard.multiplierText, { text: "x" + scoreMultiplier });
     Entities.editEntity(scoreboard.highScoreText, { text: getHighScore() });
     Entities.editEntity(scoreboard.highPersonalStreak, { text: getHighPersonalStreak() });
   }
