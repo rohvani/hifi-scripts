@@ -33,7 +33,9 @@ $(document).ready(function () {
     });
     
     $("#finalize").click(function () {
-        EventBridge.emitWebEvent(JSON.stringify({cmd: "finalize"}));
+        var obj = {cmd: "finalize"};
+        obj.puckno = $("#puckno").val();
+        EventBridge.emitWebEvent(JSON.stringify(obj));
     });
     
      $("#destroy").click(function () {

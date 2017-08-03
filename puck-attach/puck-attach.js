@@ -17,7 +17,7 @@ Script.include("/~/system/libraries/Xform.js");
 (function() { // BEGIN LOCAL_SCOPE
 
 var TABLET_BUTTON_NAME = "PUCKTACH";
-var TABLET_APP_URL = "http://content.highfidelity.com/seefo/production/puck-attach/puck-attach.html";
+var TABLET_APP_URL = "https://hifi-content.s3.amazonaws.com/seefo/production/puck-attach/puck-attach.html";
 
 var tablet = Tablet.getTablet("com.highfidelity.interface.tablet.system");
 var tabletButton = tablet.addButton({
@@ -88,11 +88,12 @@ function entityExists(entityID) {
 var VIVE_PUCK_MODEL = "http://content.highfidelity.com/seefo/production/puck-attach/vive_tracker_puck.obj";
 var VIVE_PUCK_DIMENSIONS = { x: 0.0945, y: 0.0921, z: 0.0423 }; // 1/1000th scale of model
 var VIVE_PUCK_SEARCH_DISTANCE = 1.5; // metres
-var VIVE_PUCK_SPAWN_DISTANCE = 0.25; // metres
+var VIVE_PUCK_SPAWN_DISTANCE = 0.5; // metres
+var VIVE_PUCK_TRACKED_OBJECT_MAX_DISTANCE = 10.0; // metres
 var VIVE_PUCK_NAME = "Tracked Puck";
 
 var trackedPucks = { };
-var lastPuck = { };
+var lastPuck;
 
 function createPuck(puck) {
     // create a puck entity and add it to our list of pucks
@@ -115,10 +116,15 @@ function createPuck(puck) {
 
         var puckEntityID = Entities.addEntity(puckEntityProperties);
         
+        // if we've already created this puck, destroy it
         if (trackedPucks.hasOwnProperty(puck.puckno)) {
             destroyPuck(puck.puckno);
         }
-        
+        // if we had an unfinalized puck, destroy it
+        if (lastPuck !== undefined) {
+            destroyPuck(lastPuck.name);
+        }
+        // create our new unfinalized puck
         trackedPucks[puck.puckno] = {
             puckEntityID: puckEntityID,
             trackedEntityID: ""
@@ -127,8 +133,22 @@ function createPuck(puck) {
         lastPuck.name = Number(puck.puckno);
     }
 }
-function finalizePuck() {
+function finalizePuck(puckName) {
     // find nearest entity and change its parent to the puck
+	
+    if (!trackedPucks.hasOwnProperty(puckName)) {
+        print('2');
+        return;
+    }
+    if (lastPuck === undefined) {
+        print('3');
+        return;
+    }
+    if (lastPuck.name !== Number(puckName)) {
+        print('1');
+        return;
+    }
+	
     var puckPosition = getPropertyForEntity(lastPuck.puckEntityID, "position");
     var foundEntities = Entities.findEntities(puckPosition, VIVE_PUCK_SEARCH_DISTANCE);
 
@@ -151,9 +171,19 @@ function finalizePuck() {
 
     if (foundEntity) {
         lastPuck.trackedEntityID = foundEntity;
-        Entities.editEntity(lastPuck.trackedEntityID, { "parentID": lastPuck.puckEntityID });
+        // remember the userdata and collisionless flag for the tracked entity since 
+        // we're about to remove it and make it ungrabbable and collisionless
+        lastPuck.trackedEntityUserData = getPropertyForEntity(foundEntity, "userData");
+        lastPuck.trackedEntityCollisionFlag = getPropertyForEntity(foundEntity, "collisionless");
+        // update properties of the tracked entity
+        Entities.editEntity(lastPuck.trackedEntityID, { 
+            "parentID": lastPuck.puckEntityID,
+            "userData": '{ "grabbableKey": { "grabbable": false } }',
+            "collisionless": 1
+        });
+        // remove reference to puck since it is now calibrated and finalized
         lastPuck = undefined;
-    }    
+    }
 }
 function updatePucks() {
     // for each puck, update its position and orientation
@@ -170,6 +200,12 @@ function updatePucks() {
                     var avatarXform = new Xform(MyAvatar.orientation, MyAvatar.position);
                     var puckXform = new Xform(pose.rotation, pose.translation);
                     var finalXform = Xform.mul(avatarXform, puckXform);
+                    
+                    var d = Vec3.distance(MyAvatar.position, finalXform.pos);
+                    if (d > VIVE_PUCK_TRACKED_OBJECT_MAX_DISTANCE) {
+                        print('tried to move tracked object too far away: ' + d);
+                        return;
+                    }
 
                     Entities.editEntity(puck.puckEntityID, {
                         position: finalXform.pos,
@@ -190,14 +226,32 @@ function updatePucks() {
 }
 function destroyPuck(puckName) {
     // unparent entity and delete its parent
-    var puckEntityID = trackedPucks[puckName].puckEntityID;
-    var trackedEntityID = trackedPucks[puckName].trackedEntityID;
+    if (!trackedPucks.hasOwnProperty(puckName)) {
+        return;
+    }
+	
+    var puck = trackedPucks[puckName];
+    var puckEntityID = puck.puckEntityID;
+    var trackedEntityID = puck.trackedEntityID;
 
-    // remove the puck as a parent entity and then delete the puck
-    Entities.editEntity(trackedEntityID, { "parentID": "{00000000-0000-0000-0000-000000000000}" });
-    Entities.deleteEntity(puckEntityID);
+    // remove the puck as a parent entity and restore the tracked entities 
+    // former userdata and collision flag
+    Entities.editEntity(trackedEntityID, { 
+        "parentID": "{00000000-0000-0000-0000-000000000000}",
+        "userData": puck.trackedEntityUserData,
+        "collisionless": puck.trackedEntityCollisionFlag
+    });
     
     delete trackedPucks[puckName];
+    
+    // in some cases, the entity deletion may occur before the parent change
+    // has been processed, resulting in both the puck and the tracked entity
+    // to be deleted so we wait 100ms before deleting the puck, assuming
+    // that the parent change has occured
+    Script.setTimeout(function() {
+        // delete the puck
+        Entities.deleteEntity(puckEntityID);
+    }, 100);
 }
 function destroyPucks() {
     // remove all pucks and unparent entities
@@ -225,7 +279,7 @@ function onWebEventReceived(msg) {
         createPuck(obj);
         break;
     case "finalize":
-        finalizePuck();
+        finalizePuck(obj.puckno);
         break;
     case "destroy":
         destroyPuck(obj.puckno);
