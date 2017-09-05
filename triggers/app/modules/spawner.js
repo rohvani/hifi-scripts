@@ -10,35 +10,35 @@
 
 /* 
   userdata.properties:
-    object_url,
-    lifetime,
-    cleanup
-    
+      object_url,
+      lifetime,
+      cleanup
+        
   userdata.extra_objects:
-    "Object Spawner"
+      "Object Spawner"
 */
 
 var entities = [];
 
 module.exports.onEnter = function(userdata) {
-  var properties = userdata.properties;
-  var objects = userdata.extra_objects;
-  var position = Entities.getEntityProperties(objects["Object Spawner"], ["position"]).position;
-  
-  Clipboard.importEntities(properties.object_url);
-  entities = Clipboard.pasteEntities(position);
-  
-  if (properties.lifetime > 0) {
-    for (var i = 0; i < entities.length; i++) {
-      Entities.editEntity(entities[i], { "lifetime": properties.lifetime });
+    var properties = userdata.properties;
+    var objects = userdata.extra_objects;
+    var position = Entities.getEntityProperties(objects["Object Spawner"], ["position"]).position;
+    
+    Clipboard.importEntities(properties.object_url);
+    entities = Clipboard.pasteEntities(position);
+    
+    if (properties.lifetime > 0) {
+        for (var i = 0; i < entities.length; i++) {
+            Entities.editEntity(entities[i], { "lifetime": properties.lifetime });
+        }
     }
-  }
-}
+};
 
 module.exports.onLeave = function(userdata) {
-  if (userdata.properties.cleanup == true) {
-    for (var i = 0; i < entities.length; i++) {
-      Entities.deleteEntity(entities[i]);
+    if (userdata.properties.cleanup == true) {
+        for (var i = 0; i < entities.length; i++) {
+            Entities.deleteEntity(entities[i]);
+        }
     }
-  }
-}
+};

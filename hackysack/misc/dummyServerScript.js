@@ -9,16 +9,16 @@
 */
 
 (function() {
-  var _this;
+    var _this;
 
-  function DummyServerScript() {
-    _this = this;
-  }
+    function DummyServerScript() {
+        _this = this;
+    }
 
-  DummyServerScript.prototype = {
-    preload: function(id) { },
-    unload: function() { }
-  };
+    DummyServerScript.prototype = {
+        preload: function(id) { },
+        unload: function() { }
+    };
 
-  return new DummyServerScript();
+    return new DummyServerScript();
 });
